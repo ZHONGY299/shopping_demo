@@ -18,10 +18,10 @@
                 <input type="number" v-model="g.count" @input="checkCountType(g)" min="1"/>
                 <b-button variant="info" @click="checkCount(g)">-</b-button>
             </td>
-            <td><input type="text" v-model="g.price" @blur="checkNumber(g.id)" @input="checkGoodsPrice(g)"/></td>
+            <td><input type="text" v-model="g.price" @blur="checkNumber(g.id)" @change="checkGoodsPrice(g)"/></td>
             <td>{{g.count*g.price}}</td>
             <td>
-                <b-button variant="danger">下架商品</b-button>
+                <b-button variant="danger" @click="deleteByOne(g)">下架商品</b-button>
                 <b-button variant="success">修改商品</b-button>
             </td>
         </tr>
@@ -30,7 +30,7 @@
             <td>{{counts}}</td>
             <td>商品总价格</td>
             <td>{{sumPrice}}</td>
-            <td><b-button variant="danger">删除所有商品</b-button></td>
+            <td><b-button variant="danger" @click="deleteAll()">删除所有商品</b-button></td>
             <td>
                 <b-button variant="success">添加</b-button>
             </td>
@@ -107,7 +107,21 @@ export default {
       var regu = /^[0-9]+\.?[0-9]*$/
       if (!regu.test(g.price)) {
         alert('请输入正确的商品价格(又浮点数或整数构成)')
-        g.price = 0.00
+        g.price = 1.00
+      }
+    },
+    deleteAll: function () {
+      if (confirm('确认删除所有的数据吗？')) {
+        this.goods = []
+      }
+    },
+    deleteByOne: function (g) {
+      if (confirm('确认下架这条数据吗？')) {
+        for (let t = 0; t < this.goods.length; t++) {
+          // splice(t, 1)表示删除一整项
+          this.goods.splice(t, 1)
+          return
+        }
       }
     }
   },
